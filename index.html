@@ -1,0 +1,292 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRO AIM CONVERTER | eDPI & cm/360° Calculator</title>
+    <style>
+        :root {
+            --bg: #0b0e14;
+            --card: #151a24;
+            --accent: #00f2fe;
+            --accent-hover: #4facfe;
+            --text: #ffffff;
+            --muted: #8b9bb4;
+            --border: #232b3a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-top: 0.4rem;
+        }
+
+        .container {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 720px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .box {
+            background: rgba(0,0,0,0.25);
+            padding: 1.2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+            .box h2 {
+                font-size: 1rem;
+                color: var(--accent);
+                margin-bottom: 1rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-bottom: 0.4rem;
+            margin-top: 0.8rem;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+            select:focus, input:focus {
+                border-color: var(--accent);
+            }
+
+        .results {
+            background: linear-gradient(135deg, rgba(0,242,254,0.1), rgba(79,172,254,0.05));
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .results {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-top: 0.3rem;
+        }
+
+            .stat-value.highlight {
+                color: var(--accent);
+            }
+
+        button.copy-btn {
+            margin-top: 1.5rem;
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(90deg, #00f2fe, #4facfe);
+            border: none;
+            border-radius: 8px;
+            color: #0b0e14;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+            button.copy-btn:active {
+                transform: scale(0.98);
+            }
+
+        footer {
+            margin-top: 2rem;
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>PRO AIM CONVERTER</h1>
+        <p class="subtitle">Instant FPS Sensitivity, eDPI & cm/360° Calculator</p>
+    </header>
+
+    <div class="container">
+        <div class="grid">
+            <div class="box">
+                <h2>1. Current Setup</h2>
+                <label>Source Game</label>
+                <select id="fromGame" onchange="calculate()">
+                    <option value="valorant">Valorant</option>
+                    <option value="cs2">Counter-Strike 2 (CS2)</option>
+                    <option value="fortnite">Fortnite (%)</option>
+                    <option value="warzone">Call of Duty: Warzone</option>
+                    <option value="apex">Apex Legends</option>
+                    <option value="overwatch">Overwatch 2</option>
+                    <option value="r6">Rainbow Six Siege</option>
+                </select>
+
+                <label>In-Game Sensitivity</label>
+                <input type="number" id="fromSens" value="0.35" step="0.001" oninput="calculate()">
+
+                <label>Current Mouse DPI</label>
+                <input type="number" id="fromDpi" value="800" step="50" oninput="calculate()">
+            </div>
+
+            <div class="box">
+                <h2>2. Target Setup</h2>
+                <label>Target Game</label>
+                <select id="toGame" onchange="calculate()">
+                    <option value="cs2">Counter-Strike 2 (CS2)</option>
+                    <option value="valorant">Valorant</option>
+                    <option value="fortnite">Fortnite (%)</option>
+                    <option value="warzone">Call of Duty: Warzone</option>
+                    <option value="apex">Apex Legends</option>
+                    <option value="overwatch">Overwatch 2</option>
+                    <option value="r6">Rainbow Six Siege</option>
+                </select>
+
+                <label>Target Mouse DPI</label>
+                <input type="number" id="toDpi" value="800" step="50" oninput="calculate()">
+            </div>
+        </div>
+
+        <div class="results">
+            <div>
+                <div class="stat-label">Converted Sens</div>
+                <div class="stat-value highlight" id="resSens">1.114</div>
+            </div>
+            <div>
+                <div class="stat-label">Target eDPI</div>
+                <div class="stat-value" id="resEdpi">891</div>
+            </div>
+            <div>
+                <div class="stat-label">cm / 360°</div>
+                <div class="stat-value" id="resCm">46.65 cm</div>
+            </div>
+        </div>
+
+        <button class="copy-btn" onclick="copyResult()">COPY CONVERTED SENSITIVITY</button>
+    </div>
+
+    <footer>Built for Competitive Gamers • Zero Ads • 100% Free</footer>
+
+    <script>
+    // Yaw values (degrees per count) for exact 360 distance math
+    const yawMap = {
+        valorant: 0.07,
+        cs2: 0.022,
+        apex: 0.022,
+        warzone: 0.0066,
+        overwatch: 0.0066,
+        fortnite: 0.005555,
+        r6: 0.005729578
+    };
+
+    function calculate() {
+        const fromGame = document.getElementById('fromGame').value;
+        const toGame = document.getElementById('toGame').value;
+        const fromSens = parseFloat(document.getElementById('fromSens').value) || 0;
+        const fromDpi = parseFloat(document.getElementById('fromDpi').value) || 800;
+        const toDpi = parseFloat(document.getElementById('toDpi').value) || 800;
+
+        if (fromSens <= 0 || fromDpi <= 0 || toDpi <= 0) return;
+
+        // Calculate inches for a full 360 turn
+        const degreesPerCountFrom = fromSens * yawMap[fromGame];
+        const countsPer360 = 360 / degreesPerCountFrom;
+        const inchesPer360 = countsPer360 / fromDpi;
+        const cmPer360 = inchesPer360 * 2.54;
+
+        // Convert to target game
+        const targetCountsPer360 = inchesPer360 * toDpi;
+        const targetDegreesPerCount = 360 / targetCountsPer360;
+        const toSens = targetDegreesPerCount / yawMap[toGame];
+        const toEdpi = toSens * toDpi;
+
+        document.getElementById('resSens').innerText = toSens.toFixed(4);
+        document.getElementById('resEdpi').innerText = Math.round(toEdpi);
+        document.getElementById('resCm').innerText = cmPer360.toFixed(2) + " cm";
+    }
+
+    function copyResult() {
+        const val = document.getElementById('resSens').innerText;
+        navigator.clipboard.writeText(val);
+        const btn = document.querySelector('.copy-btn');
+        btn.innerText = "COPIED: " + val;
+        setTimeout(() => { btn.innerText = "COPY CONVERTED SENSITIVITY"; }, 1500);
+    }
+
+    calculate();
+    </script>
+
+</body>
+</html>
